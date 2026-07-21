@@ -72,6 +72,40 @@
                 </div>
             </div>
 
+            <!-- Alertes de succès / d'erreur -->
+@if(session('success'))
+    <div class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-semibold">
+        ✅ {{ session('success') }}
+    </div>
+@endif
+
+@if(session('error'))
+    <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm font-semibold">
+        ⚠️ {{ session('error') }}
+    </div>
+@endif
+
+<!-- Formulaire de réservation -->
+<div class="bg-gray-900/60 p-6 rounded-xl border border-gray-700/50 mb-8">
+    <h3 class="text-lg font-bold text-white mb-3">⚡ Demander une réservation</h3>
+    <form method="POST" action="{{ route('reservations.store', $trajet) }}" class="flex flex-col md:flex-row gap-4 items-end">
+        @csrf
+        <div class="flex-1">
+            <label for="passager_id" class="block text-xs font-semibold uppercase text-gray-400 mb-1">Sélectionner un salarié passager</label>
+            <select name="passager_id" id="passager_id" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-emerald-500 text-sm">
+                <option value="">-- Choisir un employé (passager) --</option>
+                @foreach(\App\Models\User::where('id', '!=', $trajet->conducteur_id)->get() as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->entreprise->nom ?? 'Indépendant' }})</option>
+                @endforeach
+            </select>
+        </div>
+        <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2 rounded-lg transition shadow-md text-sm">
+            Réserver ce trajet
+        </button>
+    </form>
+</div>
+
+
             <!-- Liste des réservations actuelles -->
             <div class="mt-8 pt-6 border-t border-gray-700/60">
                 <h3 class="text-lg font-bold text-gray-200 mb-4">📋 Passagers inscrits ({{ $trajet->reservations->count() }})</h3>
