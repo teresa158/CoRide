@@ -8,3 +8,4 @@ Route::get('/', function () {
 });
 
 Route::get('/trajets', [TrajetController::class, 'index'])->name('trajets.index');
+Route::get('/trajets/{trajet}', [TrajetController::class, 'show'])->name('trajets.show');
