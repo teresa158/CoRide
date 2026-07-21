@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('entreprises', function (Blueprint $table) {
             $table->id();
+            $table->string('nom');
+            $table->string('secteur_activite')->nullable();
+            $table->string('adresse')->nullable();
             $table->timestamps();
         });
     }

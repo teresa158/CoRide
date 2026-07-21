@@ -21,6 +21,8 @@ class EmployeSeeder extends Seeder
         $file = fopen($filePath, 'r');
         $header = fgetcsv($file); // Lire la 1ère ligne (en-tête) : id,nom,email,entreprise,ville_residence,role
 
+        $defaultPassword = Hash::make('password');
+
         while (($row = fgetcsv($file)) !== false) {
             if (count($row) < count($header)) {
                 continue;
@@ -37,7 +39,7 @@ class EmployeSeeder extends Seeder
                 [
                     'entreprise_id' => $entreprise?->id,
                     'name' => trim($data['nom']),
-                    'password' => Hash::make('password'), // Mot de passe haché par défaut
+                    'password' => $defaultPassword, // Mot de passe haché pré-calculé
                     'ville_residence' => trim($data['ville_residence']),
                     'role' => trim($data['role']),
                 ]

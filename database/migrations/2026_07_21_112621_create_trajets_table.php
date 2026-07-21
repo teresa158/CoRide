@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('trajets', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('conducteur_id')->constrained('users')->cascadeOnDelete();
+            $table->string('ville_depart');
+            $table->string('ville_arrivee');
+            $table->string('horaire');
+            $table->integer('places_disponibles');
+            $table->string('jours_recurrence')->nullable();
             $table->timestamps();
         });
     }

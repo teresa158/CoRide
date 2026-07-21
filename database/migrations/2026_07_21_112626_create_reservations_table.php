@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('trajet_id')->constrained('trajets')->cascadeOnDelete();
+            $table->foreignId('passager_id')->constrained('users')->cascadeOnDelete();
+            $table->string('statut')->default('en_attente');
+            $table->json('resultat_ia')->nullable();
             $table->timestamps();
         });
     }

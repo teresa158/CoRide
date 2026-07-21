@@ -18,7 +18,7 @@ class TrajetSeeder extends Seeder
         }
 
         $file = fopen($filePath, 'r');
-        $header = fgetcsv($file); // en-tête : id,conducteurid,villedepart,villearrivee,horaire,placesdisponibles,jours_recurrence
+        $header = fgetcsv($file);
 
         while (($row = fgetcsv($file)) !== false) {
             if (count($row) < count($header)) {
@@ -27,9 +27,8 @@ class TrajetSeeder extends Seeder
 
             $data = array_combine($header, $row);
 
-            $conducteurId = (int) trim($data['conducteurid']);
+            $conducteurId = (int) trim($data['conducteur_id'] ?? $data['conducteurid']);
 
-            // Vérifier que le conducteur existe
             if (!User::find($conducteurId)) {
                 continue;
             }
@@ -40,11 +39,11 @@ class TrajetSeeder extends Seeder
                 ],
                 [
                     'conducteur_id' => $conducteurId,
-                    'ville_depart' => trim($data['villedepart']),
-                    'ville_arrivee' => trim($data['villearrivee']),
+                    'ville_depart' => trim($data['ville_depart'] ?? $data['villedepart']),
+                    'ville_arrivee' => trim($data['ville_arrivee'] ?? $data['villearrivee']),
                     'horaire' => trim($data['horaire']),
-                    'places_disponibles' => (int) trim($data['placesdisponibles']),
-                    'jours_recurrence' => trim($data['jours_recurrence']),
+                    'places_disponibles' => (int) trim($data['places_disponibles'] ?? $data['placesdisponibles']),
+                    'jours_recurrence' => trim($data['jours_recurrence'] ?? ''),
                 ]
             );
         }
