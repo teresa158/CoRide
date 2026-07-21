@@ -15,9 +15,14 @@
                 <h1 class="text-3xl font-bold text-emerald-400">🚗 CoRide</h1>
                 <p class="text-gray-400 text-sm">Plateforme de Covoiturage d'Entreprise</p>
             </div>
-            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1.5 rounded-full font-semibold">
-                {{ $trajets->count() }} trajet(s) trouvé(s)
-            </span>
+            <div class="flex items-center gap-4">
+                <a href="{{ route('trajets.create') }}" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-md">
+                    + Proposer un trajet
+                </a>
+                <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs px-3 py-1.5 rounded-full font-semibold">
+                    {{ $trajets->count() }} trajet(s) trouvé(s)
+                </span>
+            </div>
         </div>
 
         <!-- Formulaire de recherche / filtrage -->
