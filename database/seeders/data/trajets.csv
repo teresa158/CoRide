@@ -1,0 +1,26 @@
+id,conducteurid,villedepart,villearrivee,horaire,placesdisponibles,jours_recurrence
+1,2,Bouznika,Casablanca,07:30:00,3,Du Lundi au Vendredi
+2,3,Rabat,Casablanca,08:00:00,4,Lundi;Mercredi;Vendredi
+3,4,Rabat,Bouznika,07:45:00,2,Du Lundi au Vendredi
+4,5,Rabat,Casablanca,08:30:00,3,Du Lundi au Vendredi
+5,6,Casablanca,Rabat,18:00:00,4,Du Lundi au Vendredi
+6,7,Skhirat,Rabat,07:45:00,2,Du Lundi au Vendredi
+7,9,Rabat,Skhirat,17:30:00,3,Du Lundi au Vendredi
+8,12,Rabat,Casablanca,07:15:00,3,Lundi;Mardi;Jeudi
+9,14,Rabat,Mohammedia,08:00:00,2,Du Lundi au Vendredi
+10,15,Skhirat,Rabat,08:00:00,3,Du Lundi au Vendredi
+11,16,Casablanca,Bouznika,17:45:00,3,Du Lundi au Vendredi
+12,17,Témara,Casablanca,07:30:00,2,Du Lundi au Vendredi
+13,18,Mohammedia,Rabat,08:15:00,3,Du Lundi au Vendredi
+14,21,Bouznika,Rabat,07:50:00,3,Du Lundi au Vendredi
+15,22,Casablanca,Rabat,07:15:00,4,Du Lundi au Vendredi
+16,23,Rabat,Témara,18:30:00,2,Lundi;Mercredi;Vendredi
+17,25,Salé,Casablanca,07:00:00,3,Du Lundi au Vendredi
+18,27,Témara,Rabat,08:00:00,3,Du Lundi au Vendredi
+19,29,Skhirat,Casablanca,07:20:00,2,Du Lundi au Vendredi
+20,31,Rabat,Casablanca,08:15:00,3,Du Lundi au Vendredi
+21,33,Casablanca,Skhirat,18:15:00,3,Du Lundi au Vendredi
+22,35,Mohammedia,Casablanca,08:00:00,2,Du Lundi au Vendredi
+23,37,Bouznika,Témara,07:40:00,3,Du Lundi au Vendredi
+24,39,Rabat,Mohammedia,17:45:00,3,Du Lundi au Vendredi
+25,40,Casablanca,Rabat,08:00:00,4,Du Lundi au Vendredi
