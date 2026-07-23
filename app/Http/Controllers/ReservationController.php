@@ -7,8 +7,17 @@ use App\Models\Trajet;
 use App\Models\User;
 use Illuminate\Http\Request;
 
+use App\Services\AiMatcher;
+
 class ReservationController extends Controller
 {
+    protected $aiMatcher;
+
+    public function __construct(AiMatcher $aiMatcher)
+    {
+        $this->aiMatcher = $aiMatcher;
+    }
+
     /**
      * Enregistre une demande de réservation pour un trajet.
      */
@@ -18,31 +27,34 @@ class ReservationController extends Controller
             'passager_id' => 'required|exists:users,id',
         ]);
 
-        $passagerId = $request->passager_id;
+        $passager = User::findOrFail($request->passager_id);
 
         if ($trajet->places_disponibles <= 0) {
             return redirect()->back()->with('error', 'Désolé, ce trajet n\'a plus de places disponibles.');
         }
 
-        if ($trajet->conducteur_id == $passagerId) {
+        if ($trajet->conducteur_id == $passager->id) {
             return redirect()->back()->with('error', 'Vous êtes le conducteur de ce trajet !');
         }
 
         $dejaReserve = Reservation::where('trajet_id', $trajet->id)
-            ->where('passager_id', $passagerId)
+            ->where('passager_id', $passager->id)
             ->exists();
 
         if ($dejaReserve) {
             return redirect()->back()->with('error', 'Vous avez déjà soumis une demande de réservation pour ce trajet.');
         }
 
+        // Calcul dynamique via le service
+        $compatibilite = $this->aiMatcher->calculateCompatibility($passager, $trajet);
+
         Reservation::create([
             'trajet_id' => $trajet->id,
-            'passager_id' => $passagerId,
+            'passager_id' => $passager->id,
             'statut' => 'en_attente',
             'resultat_ia' => json_encode([
-                'score' => rand(75, 98),
-                'justification' => 'Compatibilité d\'itinéraire validée automatiquement.',
+                'score' => $compatibilite['score'],
+                'justification' => $compatibilite['justification'],
             ]),
         ]);
 
