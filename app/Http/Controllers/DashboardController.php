@@ -10,8 +10,15 @@ class DashboardController extends Controller
     /**
      * Affiche l'espace personnel (Dashboard) d'un salarié.
      */
-    public function show(User $user)
+    public function show(User $user = null)
     {
+        // Si aucun utilisateur n'est spécifié, utiliser l'utilisateur connecté
+        $user = $user ?? auth()->user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         // Chargement optimisé des relations
         $user->load([
             'entreprise',
