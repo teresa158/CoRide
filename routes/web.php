@@ -3,6 +3,7 @@
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,3 +17,6 @@ Route::get('/trajets/{trajet}', [TrajetController::class, 'show'])->name('trajet
 
 // Route de réservation
 Route::post('/trajets/{trajet}/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+
+// Route Dashboard (espace personnel)
+Route::get('/dashboard/{user}', [DashboardController::class, 'show'])->name('dashboard');
