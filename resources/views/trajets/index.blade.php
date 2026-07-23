@@ -11,6 +11,7 @@
     @include('partials.navbar')
 
     <div class="max-w-6xl mx-auto px-4 pb-12">
+        
         <!-- Header -->
         <div class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
             <div>
