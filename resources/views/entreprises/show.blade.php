@@ -6,9 +6,11 @@
     <title>CoRide - Espace Entreprise : {{ $entreprise->nom }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+<body class="bg-gray-900 text-gray-100 min-h-screen">
 
-    <div class="max-w-6xl mx-auto">
+    @include('partials.navbar')
+
+    <div class="max-w-6xl mx-auto px-4 pb-12">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
             <div>

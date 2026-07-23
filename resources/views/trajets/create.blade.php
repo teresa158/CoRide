@@ -6,9 +6,11 @@
     <title>CoRide - Proposer un nouveau trajet</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+<body class="bg-gray-900 text-gray-100 min-h-screen">
 
-    <div class="max-w-2xl mx-auto">
+    @include('partials.navbar')
+
+    <div class="max-w-2xl mx-auto px-4 pb-12">
         <a href="{{ route('trajets.index') }}" class="inline-flex items-center text-emerald-400 hover:text-emerald-300 mb-6 transition text-sm font-semibold">
             ← Annuler et retourner aux trajets
         </a>
