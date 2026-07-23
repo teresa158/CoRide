@@ -25,6 +25,8 @@ Route::get('/dashboard/{user}', [DashboardController::class, 'show'])->name('das
 // Actions sur les réservations
 Route::post('/reservations/{reservation}/accepter', [ReservationController::class, 'accepter'])->name('reservations.accepter');
 Route::post('/reservations/{reservation}/refuser', [ReservationController::class, 'refuser'])->name('reservations.refuser');
+Route::post('/reservations/{reservation}/annuler', [ReservationController::class, 'annuler'])->name('reservations.annuler');
+
 
 // Route pour les entreprises
 Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');

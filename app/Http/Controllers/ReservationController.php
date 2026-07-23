@@ -79,4 +79,23 @@ class ReservationController extends Controller
 
         return redirect()->back()->with('success', 'La réservation a été refusée.');
     }
+
+        /**
+     * Annule une réservation par le passager.
+     */
+    public function annuler(Reservation $reservation)
+    {
+        $trajet = $reservation->trajet;
+
+        // Si la réservation était confirmée, on libère une place sur le trajet
+        if ($reservation->statut === 'confirmee') {
+            $trajet->increment('places_disponibles');
+        }
+
+        // Mettre à jour le statut
+        $reservation->update(['statut' => 'annulee']);
+
+        return redirect()->back()->with('success', 'Votre demande de réservation a bien été annulée.');
+    }
+
 }

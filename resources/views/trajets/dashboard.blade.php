@@ -40,7 +40,15 @@
                 <p class="text-emerald-400 text-sm font-medium">{{ $user->email }}</p>
             </div>
             <div class="text-sm text-gray-400 space-y-1">
-                <div>🏢 <span class="font-semibold text-gray-200">Entreprise :</span> {{ $user->entreprise->nom ?? 'Indépendant' }}</div>
+                <div>🏢 <span class="font-semibold text-gray-200">Entreprise :</span> 
+                    @if($user->entreprise)
+                        <a href="{{ route('entreprises.show', $user->entreprise) }}" class="text-emerald-400 hover:underline font-bold">
+                            {{ $user->entreprise->nom }}
+                        </a>
+                    @else
+                        Indépendant
+                    @endif
+                </div>
                 <div>📍 <span class="font-semibold text-gray-200">Résidence :</span> {{ $user->ville_residence ?? 'Non spécifiée' }}</div>
                 <div>🎭 <span class="font-semibold text-gray-200">Rôle favori :</span> {{ ucfirst($user->role) }}</div>
             </div>
@@ -90,7 +98,7 @@
                                                 </button>
                                             </form>
                                         @else
-                                            <span class="px-2 py-0.5 rounded font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30' }}">
+                                            <span class="px-2 py-0.5 rounded font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : ($reservation->statut === 'annulee' ? 'bg-gray-600/20 text-gray-400 border border-gray-600/30' : 'bg-red-500/20 text-red-300 border border-red-500/30') }}">
                                                 {{ $reservation->statut }}
                                             </span>
                                         @endif
@@ -113,12 +121,9 @@
                 </h3>
 
                 @forelse($user->reservations as $reservation)
-                    @php
-                        $detailsIA = json_decode($reservation->resultat_ia, true);
-                    @endphp
                     <div class="bg-gray-800 border border-gray-700/40 rounded-xl p-5 shadow">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="px-2 py-0.5 rounded text-xs font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : ($reservation->statut === 'refusee' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30') }}">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : ($reservation->statut === 'refusee' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : ($reservation->statut === 'annulee' ? 'bg-gray-600/20 text-gray-400 border border-gray-600/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30')) }}">
                                 {{ $reservation->statut }}
                             </span>
                             <span class="text-xs text-gray-400 font-medium">🕒 {{ $reservation->trajet->horaire }}</span>
@@ -126,17 +131,31 @@
                         <h4 class="text-base font-bold text-white mb-2">
                             {{ $reservation->trajet->ville_depart }} ➔ {{ $reservation->trajet->ville_arrivee }}
                         </h4>
-                        <p class="text-xs text-gray-400 mb-3">Conducteur : <span class="text-gray-200 font-semibold">{{ $reservation->trajet->conducteur->name }}</span></p>
+                        
+                        <div class="flex justify-between items-center mb-3 text-xs">
+                            <p class="text-gray-400">Conducteur : <span class="text-gray-200 font-semibold">{{ $reservation->trajet->conducteur->name }}</span></p>
+                            @if($reservation->statut !== 'annulee' && $reservation->statut !== 'refusee')
+                                <form method="POST" action="{{ route('reservations.annuler', $reservation) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')">
+                                    @csrf
+                                    <button type="submit" class="text-red-400 hover:text-red-300 hover:underline font-semibold">
+                                        Annuler ma demande
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
 
                         <!-- Analyse Compatibilité IA -->
-                        @if($detailsIA)
-                            <div class="bg-gray-900/60 p-3 rounded-lg border border-emerald-500/10 text-xs">
-                                <div class="flex justify-between items-center mb-1">
-                                    <span class="text-emerald-400 font-semibold">🤖 Score de compatibilité IA :</span>
-                                    <span class="font-bold text-emerald-300 bg-emerald-500/10 px-1.5 py-0.5 rounded">{{ $detailsIA['score'] ?? 80 }}%</span>
+                        @if($reservation->resultat_ia)
+                            @php $detailsIA = json_decode($reservation->resultat_ia, true); @endphp
+                            @if($detailsIA)
+                                <div class="bg-gray-900/60 p-3 rounded-lg border border-emerald-500/10 text-xs">
+                                    <div class="flex justify-between items-center mb-1">
+                                        <span class="text-emerald-400 font-semibold">🤖 Score de compatibilité IA :</span>
+                                        <span class="font-bold text-emerald-300 bg-emerald-500/10 px-1.5 py-0.5 rounded">{{ $detailsIA['score'] ?? 80 }}%</span>
+                                    </div>
+                                    <p class="text-gray-400 italic">"{{ $detailsIA['justification'] ?? '' }}"</p>
                                 </div>
-                                <p class="text-gray-400 italic">"{{ $detailsIA['justification'] ?? '' }}"</p>
-                            </div>
+                            @endif
                         @endif
                     </div>
                 @empty
