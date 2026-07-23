@@ -6,8 +6,20 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntrepriseController;
 
+use App\Models\Entreprise;
+use App\Models\Trajet;
+use App\Models\User;
+use App\Models\Reservation;
+
 Route::get('/', function () {
-    return view('welcome');
+    $stats = [
+        'entreprises' => Entreprise::count(),
+        'salaries' => User::count(),
+        'trajets' => Trajet::count(),
+        'co2' => Reservation::where('statut', 'confirmee')->count() * 15 * 0.12, // 120g CO2 par km économisé
+    ];
+
+    return view('welcome', compact('stats'));
 });
 
 // Routes pour les Trajets
