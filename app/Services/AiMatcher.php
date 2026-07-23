@@ -43,5 +43,6 @@ class AiMatcher
             'score' => $score,
             'justification' => $justification,
         ];
+        
     }
 }
