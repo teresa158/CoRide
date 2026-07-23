@@ -20,6 +20,19 @@
             </span>
         </div>
 
+        <!-- Alertes de succès / d'erreur -->
+        @if(session('success'))
+            <div class="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm font-semibold">
+                ✅ {{ session('success') }}
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm font-semibold">
+                ⚠️ {{ session('error') }}
+            </div>
+        @endif
+
         <!-- Profil info -->
         <div class="bg-gray-800 border border-gray-700/60 rounded-2xl p-6 mb-8 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
@@ -44,7 +57,7 @@
                     <div class="bg-gray-800 border border-gray-700/40 rounded-xl p-5 shadow">
                         <div class="flex justify-between items-center mb-3">
                             <span class="text-xs font-semibold text-emerald-400 uppercase">Trajet #{{ $trajet->id }}</span>
-                            <span class="text-xs text-gray-400 font-medium">🕒 {{ $trajet->horaire }}</span>
+                            <span class="text-xs text-gray-400 font-medium">🕒 {{ $trajet->horaire }} ({{ $trajet->places_disponibles }} places libres)</span>
                         </div>
                         <h4 class="text-base font-bold text-white mb-4">
                             {{ $trajet->ville_depart }} ➔ {{ $trajet->ville_arrivee }}
@@ -59,9 +72,29 @@
                                         <p class="font-semibold text-white">{{ $reservation->passager->name }}</p>
                                         <p class="text-gray-400">{{ $reservation->passager->entreprise->nom ?? '' }}</p>
                                     </div>
-                                    <span class="px-2 py-0.5 rounded font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-blue-500/20 text-blue-300' }}">
-                                        {{ $reservation->statut }}
-                                    </span>
+                                    
+                                    <div class="flex items-center gap-2">
+                                        @if($reservation->statut === 'en_attente')
+                                            <!-- Bouton Accepter -->
+                                            <form method="POST" action="{{ route('reservations.accepter', $reservation) }}">
+                                                @csrf
+                                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded text-[10px] uppercase transition">
+                                                    Accepter
+                                                </button>
+                                            </form>
+                                            <!-- Bouton Refuser -->
+                                            <form method="POST" action="{{ route('reservations.refuser', $reservation) }}">
+                                                @csrf
+                                                <button type="submit" class="bg-red-600/80 hover:bg-red-500 text-white font-bold px-2.5 py-1 rounded text-[10px] uppercase transition">
+                                                    Refuser
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="px-2 py-0.5 rounded font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30' }}">
+                                                {{ $reservation->statut }}
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                             @empty
                                 <p class="text-xs text-gray-500 italic">Aucune demande reçue.</p>
@@ -85,7 +118,7 @@
                     @endphp
                     <div class="bg-gray-800 border border-gray-700/40 rounded-xl p-5 shadow">
                         <div class="flex justify-between items-center mb-3">
-                            <span class="px-2 py-0.5 rounded text-xs font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-blue-500/20 text-blue-300' }}">
+                            <span class="px-2 py-0.5 rounded text-xs font-bold uppercase {{ $reservation->statut === 'confirmee' ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : ($reservation->statut === 'refusee' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30') }}">
                                 {{ $reservation->statut }}
                             </span>
                             <span class="text-xs text-gray-400 font-medium">🕒 {{ $reservation->trajet->horaire }}</span>

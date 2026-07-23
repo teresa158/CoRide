@@ -4,6 +4,7 @@ use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\TrajetController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EntrepriseController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,3 +21,10 @@ Route::post('/trajets/{trajet}/reservations', [ReservationController::class, 'st
 
 // Route Dashboard (espace personnel)
 Route::get('/dashboard/{user}', [DashboardController::class, 'show'])->name('dashboard');
+
+// Actions sur les réservations
+Route::post('/reservations/{reservation}/accepter', [ReservationController::class, 'accepter'])->name('reservations.accepter');
+Route::post('/reservations/{reservation}/refuser', [ReservationController::class, 'refuser'])->name('reservations.refuser');
+
+// Route pour les entreprises
+Route::get('/entreprises/{entreprise}', [EntrepriseController::class, 'show'])->name('entreprises.show');

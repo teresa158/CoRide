@@ -20,17 +20,14 @@ class ReservationController extends Controller
 
         $passagerId = $request->passager_id;
 
-        // 1. Règle métier : Vérifier les places disponibles
         if ($trajet->places_disponibles <= 0) {
             return redirect()->back()->with('error', 'Désolé, ce trajet n\'a plus de places disponibles.');
         }
 
-        // 2. Règle métier : Empêcher le conducteur de réserver son propre trajet
         if ($trajet->conducteur_id == $passagerId) {
             return redirect()->back()->with('error', 'Vous êtes le conducteur de ce trajet !');
         }
 
-        // 3. Règle métier : Vérifier si le passager a déjà réservé ce trajet
         $dejaReserve = Reservation::where('trajet_id', $trajet->id)
             ->where('passager_id', $passagerId)
             ->exists();
@@ -39,7 +36,6 @@ class ReservationController extends Controller
             return redirect()->back()->with('error', 'Vous avez déjà soumis une demande de réservation pour ce trajet.');
         }
 
-        // 4. Création de la réservation
         Reservation::create([
             'trajet_id' => $trajet->id,
             'passager_id' => $passagerId,
@@ -51,5 +47,36 @@ class ReservationController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Votre demande de réservation a été enregistrée avec succès !');
+    }
+
+    /**
+     * Accepte la demande de réservation.
+     */
+    public function accepter(Reservation $reservation)
+    {
+        $trajet = $reservation->trajet;
+
+        // Vérifier si le trajet dispose encore de places libres
+        if ($trajet->places_disponibles <= 0) {
+            return redirect()->back()->with('error', 'Impossible d\'accepter : ce trajet n\'a plus de places disponibles.');
+        }
+
+        // Mettre à jour le statut de la réservation
+        $reservation->update(['statut' => 'confirmee']);
+
+        // Décrémenter les places sur le trajet
+        $trajet->decrement('places_disponibles');
+
+        return redirect()->back()->with('success', 'La réservation a été confirmée avec succès !');
+    }
+
+    /**
+     * Refuse la demande de réservation.
+     */
+    public function refuser(Reservation $reservation)
+    {
+        $reservation->update(['statut' => 'refusee']);
+
+        return redirect()->back()->with('success', 'La réservation a été refusée.');
     }
 }
